@@ -5,6 +5,8 @@ const inputText = getDomElement('input-txt');
 const resultSection = getDomElement('result-section');
 const noDataWarning = getDomElement('no-data-warning');
 const waitSpinner = getDomElement('spinner');
+const horizontalBar = getDomElement('horizontal-bar');
+const showMore = getDomElement('show-more')
 
 // Handling search button click event
 document.getElementById('search-btn').addEventListener('click', () => {
@@ -22,8 +24,11 @@ document.getElementById('search-btn').addEventListener('click', () => {
 
 // search function for fetching data
 const searchProduct = async urlString => {
+    showMore.style.display = 'none';
+    horizontalBar.style.display = 'none';
     waitSpinner.style.display = 'block';
     noDataWarning.style.display = 'none';
+
     const response = await fetch(urlString);
     const data = await response.json();
 
@@ -31,17 +36,36 @@ const searchProduct = async urlString => {
     waitSpinner.style.display = 'none';
 
     if (data.data.length !== 0) {
-        data.data.forEach(element => {
-            const productDetailsUrl = `https://openapi.programming-hero.com/api/phone/${element.slug}`;
-            populateProductCard(element.image, element.phone_name, element.brand, productDetailsUrl);
-            // console.log(element);
-        });
+        horizontalBar.style.display = 'block';
+        let maxDataToShow = data.data;
+        if (data.data.length > 20) {
+            maxDataToShow = data.data.slice(0, 20)
+            showMore.style.display = 'block';
+            showMore.addEventListener('click', () => {
+                maxDataToShow = data.data;
+                // console.log(maxDataToShow);
+                showSearchResult(maxDataToShow);
+                showMore.style.display = 'none';
+            })
+        }
+        showSearchResult(maxDataToShow);
     }
     else {
         noDataWarning.style.display = 'block';
     }
+}
 
-    // console.log(getDomElement('result-section'));
+// show more product
+const showMoreProducts = () => {
+
+}
+
+const showSearchResult = maxDataToShow => {
+    maxDataToShow.forEach(element => {
+        const productDetailsUrl = `https://openapi.programming-hero.com/api/phone/${element.slug}`;
+        populateProductCard(element.image, element.phone_name, element.brand, productDetailsUrl);
+        // console.log(element);
+    });
 }
 
 // function for populating search result

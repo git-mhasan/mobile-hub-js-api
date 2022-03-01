@@ -29,6 +29,9 @@ body{
 #horizontal-bar{
     display: none;
 }
+#show-more{
+    display: none;
+}
 .display-card{
     background-color: white;
     transform: scale(1);
