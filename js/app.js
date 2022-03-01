@@ -26,36 +26,29 @@ const searchProduct = async urlString => {
     const data = await response.json();
 
     resultSection.textContent = '';
+
     data.data.forEach(element => {
-        populateProductCard(element.image, element.phone_name, element.brand);
-        console.log(element);
+        const productDetailsUrl = `https://openapi.programming-hero.com/api/phone/${element.slug}`;
+        populateProductCard(element.image, element.phone_name, element.brand, productDetailsUrl);
+        // console.log(element);
     });
     // console.log(getDomElement('result-section'));
 }
 
 // function for populating search result
-const populateProductCard = (imageString, productName, brandName, productDetails) => {
+const populateProductCard = (imageString, productName, brandName, productDetailsUrl) => {
     const cardElement = document.createElement('div');
     cardElement.classList.add('col-12', 'col-md-6', 'col-lg-4')
-    // cardElement.innerHTML = `<div class="card text-center">
-    //     <img src="${imageString}" class="card-img-top p-4 w-50">
-    //     <div class="card-body">
-    //         <h5 class="card-title">${productName}</h5>
-    //         <h6 class="card-text">Brand: ${brandName}</h6>
-    //         <button class="btn btn-primary">Details</button>
-    //     </div>
-    // </div>
-    // `;
 
-    cardElement.innerHTML = `<div class="row g-2 shadow rounded p-3">
-        <div class="col-md-4">
+    cardElement.innerHTML = `<div class="row g-2 shadow rounded p-3" style="min-height: 200px;">
+        <div class="col-4">
             <img src="${imageString}" class="img-fluid rounded-start">
         </div>
-        <div class="col-md-8">
+        <div class="col-8">
             <div class="card-body">
-                <h5 class="card-title">${productName}</h5>
-                <h6 class="card-text">Brand: ${brandName}</h6>
-                <button class="btn btn-primary">Details</button>
+                <h6 class="card-title">${productName}</h6>
+                <p class="card-text">Brand:${brandName}</p>
+                <button class="btn btn-sm btn-primary" onclick="showDetails('${productDetailsUrl}')">Details</button>
             </div>
         </div>
     </div> `
@@ -63,3 +56,8 @@ const populateProductCard = (imageString, productName, brandName, productDetails
     resultSection.appendChild(cardElement);
 }
 
+const showDetails = async productDetailsUrl => {
+    const response = await fetch(productDetailsUrl);
+    const data = await response.json();
+    console.log(data);
+}
