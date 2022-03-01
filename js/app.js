@@ -4,18 +4,17 @@ const getDomElement = idName => document.getElementById(idName);
 const inputText = getDomElement('input-txt');
 const resultSection = getDomElement('result-section');
 const noDataWarning = getDomElement('no-data-warning');
+const waitSpinner = getDomElement('spinner');
 
+// Handling search button click event
 document.getElementById('search-btn').addEventListener('click', () => {
     if (!inputText.value) {
-        // console.log('boo');
     } else if (inputText.value.trim().length === 0) {
-        // console.log('all space');
         inputText.value = '';
     } else {
         const searchUrl = `https://openapi.programming-hero.com/api/phones?search=${inputText.value.trim().toLowerCase()}
         `;
         searchProduct(searchUrl);
-        // inputText.value = '';
 
     }
 
@@ -23,12 +22,15 @@ document.getElementById('search-btn').addEventListener('click', () => {
 
 // search function for fetching data
 const searchProduct = async urlString => {
+    waitSpinner.style.display = 'block';
+    noDataWarning.style.display = 'none';
     const response = await fetch(urlString);
     const data = await response.json();
 
     resultSection.textContent = '';
+    waitSpinner.style.display = 'none';
+
     if (data.data.length !== 0) {
-        noDataWarning.style.display = 'none';
         data.data.forEach(element => {
             const productDetailsUrl = `https://openapi.programming-hero.com/api/phone/${element.slug}`;
             populateProductCard(element.image, element.phone_name, element.brand, productDetailsUrl);
@@ -36,8 +38,6 @@ const searchProduct = async urlString => {
         });
     }
     else {
-        // alert('No Data Found');
-
         noDataWarning.style.display = 'block';
     }
 
