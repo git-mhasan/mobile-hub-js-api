@@ -6,11 +6,17 @@ const resultSection = getDomElement('result-section');
 const noDataWarning = getDomElement('no-data-warning');
 const waitSpinner = getDomElement('spinner');
 const horizontalBar = getDomElement('horizontal-bar');
-const showMore = getDomElement('show-more')
+const showMore = getDomElement('show-more');
+const detailsPanel = getDomElement('details-panel');
 
 // Handling search button click event
 document.getElementById('search-btn').addEventListener('click', () => {
     if (!inputText.value) {
+        noDataWarning.style.display = 'block';
+        showMore.style.display = 'none';
+        detailsPanel.style.display = 'none';
+        resultSection.textContent = '';
+
     } else if (inputText.value.trim().length === 0) {
         inputText.value = '';
     } else {
@@ -19,7 +25,6 @@ document.getElementById('search-btn').addEventListener('click', () => {
         searchProduct(searchUrl);
 
     }
-
 });
 
 // search function for fetching data
@@ -28,6 +33,8 @@ const searchProduct = async urlString => {
     horizontalBar.style.display = 'none';
     waitSpinner.style.display = 'block';
     noDataWarning.style.display = 'none';
+    detailsPanel.style.display = 'none';
+
 
     const response = await fetch(urlString);
     const data = await response.json();
@@ -52,13 +59,14 @@ const searchProduct = async urlString => {
     }
     else {
         noDataWarning.style.display = 'block';
+        inputText.value = '';
     }
 }
 
 // show more product
-const showMoreProducts = () => {
+// const showMoreProducts = () => {
 
-}
+// }
 
 const showSearchResult = maxDataToShow => {
     maxDataToShow.forEach(element => {
@@ -91,7 +99,56 @@ const populateProductCard = (imageString, productName, brandName, productDetails
 
 // function for showing details of a product
 const showDetails = async productDetailsUrl => {
+    detailsPanel.style.display = 'block';
+    detailsPanel.textContent = '';
     const response = await fetch(productDetailsUrl);
     const data = await response.json();
-    console.log(data);
+
+    //Getting sensor data 
+    let allSensors = '';
+    data.data.mainFeatures?.sensors.forEach(element => {
+        allSensors = allSensors + element + '; ';
+    });
+
+
+    const detailCard = document.createElement('div');
+    detailCard.classList.add('mx-lg-5', 'px-md-3', 'mb-4');
+    detailCard.innerHTML = `
+        <div class="row g-2 shadow rounded p-3 g-3" style="min-height: 200px;">
+            <div class="col-12 col-md-3 d-flex flex-column align-items-center border pt-4 m-3">
+                <img src="${data.data.image}" class="img-fluid rounded-start" style="display:block;">
+                <h5 class="mt-3" style="display:block;">${data.data.name}</h5>
+                <p class="text-center" style="display:block; color:tomato">${data.data?.releaseDate ? data.data.releaseDate : 'No Release Date Found.'}</p>
+            </div>
+            
+            <div class="col-12 col-md-4">
+                <p class="text-center"> <b>Main Feature</b> </p>
+                <p>${data.data?.mainFeatures?.displaySize ? "Display: " + data.data.mainFeatures.displaySize : ""}</p>
+                <p>${data.data?.mainFeatures?.chipSet ? "Chipset: " + data.data.mainFeatures.chipSet : ""}</p>
+                <p>${data.data?.mainFeatures?.memory ? "Memory: " + data.data.mainFeatures.memory : ""}</p>
+                <p>${data.data?.mainFeatures?.storage ? "Storage: " + data.data.mainFeatures.storage : ""}</p>
+                
+            </div>
+
+            <div class="col-12 col-md-4">
+               
+                <p class="text-center"> <b>Other Feature</b> </p>
+                <p>${data.data?.others?.Bluetooth ? "Bluetooth: " + data.data.others.Bluetooth : "No"}</p>
+                <p>${data.data?.others?.GPS ? "GPS: " + data.data.others.GPS : "No"}</p>
+                <p>${data.data?.others?.NFC ? "NFC: " + data.data.others.NFC : "No"}</p>
+                <p>${data.data?.others?.Radio ? "Radio: " + data.data.others.Radio : "No"}</p>
+                <p>${data.data?.others?.USB ? "USB: " + data.data.others.USB : "No"}</p>
+                <p>${data.data?.others?.WLAN ? "WLAN: " + data.data.others.WLAN : "No"}</p>
+                
+            </div>
+
+            <div class="col-12 m-3">
+                <p class="text-center"> <b>Sensors: </b> ${allSensors}</p>
+                
+                
+            </div >
+        </div >
+    `;
+    detailsPanel.appendChild(detailCard);
+    console.log(data.data);
 }
