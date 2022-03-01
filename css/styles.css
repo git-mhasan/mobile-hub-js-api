@@ -14,3 +14,15 @@ body{
     background-color: white;
     min-height: 100vh;
 }
+
+#spinner{
+    display: none;
+}
+
+#details-panel{
+    display: none;
+}
+
+#horizontal-bar{
+    display: none;
+}

@@ -2,6 +2,8 @@
 const getDomElement = idName => document.getElementById(idName);
 
 const inputText = getDomElement('input-txt');
+const resultSection = getDomElement('result-section');
+
 document.getElementById('search-btn').addEventListener('click', () => {
     if (!inputText.value) {
         // console.log('boo');
@@ -11,7 +13,6 @@ document.getElementById('search-btn').addEventListener('click', () => {
     } else {
         const searchUrl = `https://openapi.programming-hero.com/api/phones?search=${inputText.value.trim().toLowerCase()}
         `;
-
         searchProduct(searchUrl);
         // inputText.value = '';
 
@@ -19,6 +20,7 @@ document.getElementById('search-btn').addEventListener('click', () => {
 
 });
 
+// search function for fetching data
 const searchProduct = data => {
 
     console.log(data);
@@ -27,6 +29,17 @@ const searchProduct = data => {
 
 // function for populating search result
 const populateProductCard = (imageString, productName, brandName, productDetails) => {
-
+    const cardElement = document.createElement('div');
+    cardElement.classList.add('col-12', 'col-md-6', 'col-lg-4')
+    cardElement.innerHTML = `<div class="card text-center">
+        <img src="${imageString}" class="card-img-top">
+        <div class="card-body">
+            <h5 class="card-title">${productName}</h5>
+            <h3 class="card-text">${brandName}</h3>
+            <button class="btn btn-primary">Details</button>
+        </div>
+    </div>
+    `;
+    resultSection.appendChild(cardElement);
 }
 
