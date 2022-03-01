@@ -22,7 +22,19 @@ body{
 #details-panel{
     display: none;
 }
+#no-data-warning{
+    display: none;
+}
 
 #horizontal-bar{
     display: none;
+}
+.display-card{
+    background-color: white;
+    transform: scale(1);
+    transition: 0.3s;
+}
+.display-card:hover {
+    /* box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); */
+    transform: scale(1.02);
 }

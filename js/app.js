@@ -3,6 +3,7 @@ const getDomElement = idName => document.getElementById(idName);
 
 const inputText = getDomElement('input-txt');
 const resultSection = getDomElement('result-section');
+const noDataWarning = getDomElement('no-data-warning');
 
 document.getElementById('search-btn').addEventListener('click', () => {
     if (!inputText.value) {
@@ -26,19 +27,27 @@ const searchProduct = async urlString => {
     const data = await response.json();
 
     resultSection.textContent = '';
+    if (data.data.length !== 0) {
+        noDataWarning.style.display = 'none';
+        data.data.forEach(element => {
+            const productDetailsUrl = `https://openapi.programming-hero.com/api/phone/${element.slug}`;
+            populateProductCard(element.image, element.phone_name, element.brand, productDetailsUrl);
+            // console.log(element);
+        });
+    }
+    else {
+        // alert('No Data Found');
 
-    data.data.forEach(element => {
-        const productDetailsUrl = `https://openapi.programming-hero.com/api/phone/${element.slug}`;
-        populateProductCard(element.image, element.phone_name, element.brand, productDetailsUrl);
-        // console.log(element);
-    });
+        noDataWarning.style.display = 'block';
+    }
+
     // console.log(getDomElement('result-section'));
 }
 
 // function for populating search result
 const populateProductCard = (imageString, productName, brandName, productDetailsUrl) => {
     const cardElement = document.createElement('div');
-    cardElement.classList.add('col-12', 'col-md-6', 'col-lg-4')
+    cardElement.classList.add('col-12', 'col-md-6', 'col-lg-4', 'display-card')
 
     cardElement.innerHTML = `<div class="row g-2 shadow rounded p-3" style="min-height: 200px;">
         <div class="col-4">
@@ -56,6 +65,7 @@ const populateProductCard = (imageString, productName, brandName, productDetails
     resultSection.appendChild(cardElement);
 }
 
+// function for showing details of a product
 const showDetails = async productDetailsUrl => {
     const response = await fetch(productDetailsUrl);
     const data = await response.json();
