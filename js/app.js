@@ -21,9 +21,15 @@ document.getElementById('search-btn').addEventListener('click', () => {
 });
 
 // search function for fetching data
-const searchProduct = data => {
+const searchProduct = async urlString => {
+    const response = await fetch(urlString);
+    const data = await response.json();
 
-    console.log(data);
+    resultSection.textContent = '';
+    data.data.forEach(element => {
+        populateProductCard(element.image, element.phone_name, element.brand);
+        console.log(element);
+    });
     // console.log(getDomElement('result-section'));
 }
 
@@ -31,15 +37,29 @@ const searchProduct = data => {
 const populateProductCard = (imageString, productName, brandName, productDetails) => {
     const cardElement = document.createElement('div');
     cardElement.classList.add('col-12', 'col-md-6', 'col-lg-4')
-    cardElement.innerHTML = `<div class="card text-center">
-        <img src="${imageString}" class="card-img-top">
-        <div class="card-body">
-            <h5 class="card-title">${productName}</h5>
-            <h3 class="card-text">${brandName}</h3>
-            <button class="btn btn-primary">Details</button>
+    // cardElement.innerHTML = `<div class="card text-center">
+    //     <img src="${imageString}" class="card-img-top p-4 w-50">
+    //     <div class="card-body">
+    //         <h5 class="card-title">${productName}</h5>
+    //         <h6 class="card-text">Brand: ${brandName}</h6>
+    //         <button class="btn btn-primary">Details</button>
+    //     </div>
+    // </div>
+    // `;
+
+    cardElement.innerHTML = `<div class="row g-2 shadow rounded p-3">
+        <div class="col-md-4">
+            <img src="${imageString}" class="img-fluid rounded-start">
         </div>
-    </div>
-    `;
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">${productName}</h5>
+                <h6 class="card-text">Brand: ${brandName}</h6>
+                <button class="btn btn-primary">Details</button>
+            </div>
+        </div>
+    </div> `
+
     resultSection.appendChild(cardElement);
 }
 
