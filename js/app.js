@@ -1,6 +1,7 @@
 // function for getting dom element by id Name
 const getDomElement = idName => document.getElementById(idName);
 
+//Global scoped DOM Element.
 const inputText = getDomElement('input-txt');
 const resultSection = getDomElement('result-section');
 const noDataWarning = getDomElement('no-data-warning');
@@ -9,23 +10,6 @@ const horizontalBar = getDomElement('horizontal-bar');
 const showMore = getDomElement('show-more');
 const detailsPanel = getDomElement('details-panel');
 
-// Handling search button click event
-document.getElementById('search-btn').addEventListener('click', () => {
-    if (!inputText.value) {
-        noDataWarning.style.display = 'block';
-        showMore.style.display = 'none';
-        detailsPanel.style.display = 'none';
-        resultSection.textContent = '';
-
-    } else if (inputText.value.trim().length === 0) {
-        inputText.value = '';
-    } else {
-        const searchUrl = `https://openapi.programming-hero.com/api/phones?search=${inputText.value.trim().toLowerCase()}
-        `;
-        searchProduct(searchUrl);
-
-    }
-});
 
 // search function for fetching data
 const searchProduct = async urlString => {
@@ -45,12 +29,15 @@ const searchProduct = async urlString => {
     if (data.data.length !== 0) {
         horizontalBar.style.display = 'block';
         let maxDataToShow = data.data;
+
+        //Showing only 20 data if the search result is more than 20
         if (data.data.length > 20) {
             maxDataToShow = data.data.slice(0, 20)
             showMore.style.display = 'block';
+
+            //Showing all data if the show more button is clicked.
             showMore.addEventListener('click', () => {
                 maxDataToShow = data.data;
-                // console.log(maxDataToShow);
                 showSearchResult(maxDataToShow);
                 showMore.style.display = 'none';
             })
@@ -62,11 +49,6 @@ const searchProduct = async urlString => {
         inputText.value = '';
     }
 }
-
-// show more product
-// const showMoreProducts = () => {
-
-// }
 
 const showSearchResult = maxDataToShow => {
     maxDataToShow.forEach(element => {
@@ -101,10 +83,12 @@ const populateProductCard = (imageString, productName, brandName, productDetails
 const showDetails = async productDetailsUrl => {
     detailsPanel.style.display = 'block';
     detailsPanel.textContent = '';
+
+    //api call for product detail
     const response = await fetch(productDetailsUrl);
     const data = await response.json();
 
-    //Getting sensor data 
+    //Getting sensor data
     let allSensors = '';
     data.data.mainFeatures?.sensors.forEach(element => {
         allSensors = allSensors + element + '; ';
@@ -115,14 +99,15 @@ const showDetails = async productDetailsUrl => {
     detailCard.classList.add('mx-lg-5', 'px-md-3', 'mb-4');
     detailCard.innerHTML = `
         <div class="row g-2 shadow rounded p-3 g-3" style="min-height: 200px;">
-            <div class="col-12 col-md-3 d-flex flex-column align-items-center border pt-4 m-3">
+
+            <div class="col-12 col-md-5 col-lg-3 d-flex flex-column align-items-center border pt-4 m-3">
                 <img src="${data.data.image}" class="img-fluid rounded-start" style="display:block;">
-                <h5 class="mt-3" style="display:block;">${data.data.name}</h5>
+                <h5 class="mt-3 text-primary" style="display:block;">${data.data.name}</h5>
                 <p class="text-center" style="display:block; color:tomato">${data.data?.releaseDate ? data.data.releaseDate : 'No Release Date Found.'}</p>
             </div>
             
-            <div class="col-12 col-md-4">
-                <p class="text-center"> <b>Main Feature</b> </p>
+            <div class="col-12 col-md-6 col-lg-4">
+                <p class="text-center text-primary"> <b>Main Feature</b> </p>
                 <p>${data.data?.mainFeatures?.displaySize ? "Display: " + data.data.mainFeatures.displaySize : ""}</p>
                 <p>${data.data?.mainFeatures?.chipSet ? "Chipset: " + data.data.mainFeatures.chipSet : ""}</p>
                 <p>${data.data?.mainFeatures?.memory ? "Memory: " + data.data.mainFeatures.memory : ""}</p>
@@ -130,9 +115,9 @@ const showDetails = async productDetailsUrl => {
                 
             </div>
 
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-6 col-lg-4">
                
-                <p class="text-center"> <b>Other Feature</b> </p>
+                <p class="text-center text-primary"> <b>Other Feature</b> </p>
                 <p>${data.data?.others?.Bluetooth ? "Bluetooth: " + data.data.others.Bluetooth : "No"}</p>
                 <p>${data.data?.others?.GPS ? "GPS: " + data.data.others.GPS : "No"}</p>
                 <p>${data.data?.others?.NFC ? "NFC: " + data.data.others.NFC : "No"}</p>
@@ -142,13 +127,29 @@ const showDetails = async productDetailsUrl => {
                 
             </div>
 
-            <div class="col-12 m-3">
-                <p class="text-center"> <b>Sensors: </b> ${allSensors}</p>
+            <div class="col-12 col-md-5 col-lg-12 m-3">
+                <p class="text-center"> <b class="text-primary">Sensors: </b> ${allSensors ? allSensors : 'No Sensor Found.'}</p>
                 
                 
             </div >
         </div >
     `;
     detailsPanel.appendChild(detailCard);
-    console.log(data.data);
 }
+
+// Handling search button click event
+document.getElementById('search-btn').addEventListener('click', () => {
+    if (!inputText.value) {
+        noDataWarning.style.display = 'block';
+        showMore.style.display = 'none';
+        detailsPanel.style.display = 'none';
+        resultSection.textContent = '';
+
+    } else if (inputText.value.trim().length === 0) {
+        inputText.value = '';
+    } else {
+        const searchUrl = `https://openapi.programming-hero.com/api/phones?search=${inputText.value.trim().toLowerCase()}
+        `;
+        searchProduct(searchUrl);
+    }
+});
