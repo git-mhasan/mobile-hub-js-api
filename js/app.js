@@ -54,11 +54,11 @@ const searchProduct = async urlString => {
     }
 }
 
+//function for searching user input data
 const showSearchResult = maxDataToShow => {
     maxDataToShow.forEach(element => {
         const productDetailsUrl = `https://openapi.programming-hero.com/api/phone/${element.slug}`;
         populateProductCard(element.image, element.phone_name, element.brand, productDetailsUrl);
-        // console.log(element);
     });
 }
 
