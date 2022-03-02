@@ -9,11 +9,13 @@ const waitSpinner = getDomElement('spinner');
 const horizontalBar = getDomElement('horizontal-bar');
 const showMore = getDomElement('show-more');
 const detailsPanel = getDomElement('details-panel');
+const landingImage = getDomElement('landing-image');
 
 
 // search function for fetching data
 const searchProduct = async urlString => {
     showMore.style.display = 'none';
+    landingImage.style.display = 'none';
     horizontalBar.style.display = 'none';
     waitSpinner.style.display = 'block';
     noDataWarning.style.display = 'none';
@@ -46,6 +48,8 @@ const searchProduct = async urlString => {
     }
     else {
         noDataWarning.style.display = 'block';
+        landingImage.style.display = 'none';
+
         inputText.value = '';
     }
 }
@@ -96,7 +100,7 @@ const showDetails = async productDetailsUrl => {
 
 
     const detailCard = document.createElement('div');
-    detailCard.classList.add('mx-lg-5', 'px-md-3', 'mb-4');
+    detailCard.classList.add('mx-lg-5', 'px-md-3', 'my-5');
     detailCard.innerHTML = `
         <div class="row g-2 shadow rounded p-3 g-3" style="min-height: 200px;">
 
@@ -143,9 +147,11 @@ document.getElementById('search-btn').addEventListener('click', () => {
         noDataWarning.style.display = 'block';
         showMore.style.display = 'none';
         detailsPanel.style.display = 'none';
+        landingImage.style.display = 'none';
         resultSection.textContent = '';
 
     } else if (inputText.value.trim().length === 0) {
+        landingImage.style.display = 'none';
         inputText.value = '';
     } else {
         const searchUrl = `https://openapi.programming-hero.com/api/phones?search=${inputText.value.trim().toLowerCase()}
