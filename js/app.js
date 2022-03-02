@@ -92,6 +92,7 @@ const showDetails = async productDetailsUrl => {
     const response = await fetch(productDetailsUrl);
     const data = await response.json();
 
+    console.log(data);
     //Getting sensor data
     let allSensors = '';
     data.data.mainFeatures?.sensors.forEach(element => {
@@ -112,22 +113,22 @@ const showDetails = async productDetailsUrl => {
             
             <div class="col-12 col-md-6 col-lg-4">
                 <p class="text-center text-primary"> <b>Main Feature</b> </p>
-                <p>${data.data?.mainFeatures?.displaySize ? "Display: " + data.data.mainFeatures.displaySize : ""}</p>
-                <p>${data.data?.mainFeatures?.chipSet ? "Chipset: " + data.data.mainFeatures.chipSet : ""}</p>
-                <p>${data.data?.mainFeatures?.memory ? "Memory: " + data.data.mainFeatures.memory : ""}</p>
-                <p>${data.data?.mainFeatures?.storage ? "Storage: " + data.data.mainFeatures.storage : ""}</p>
+                <p><b>Display:</b>${data.data?.mainFeatures?.displaySize ? " " + data.data.mainFeatures.displaySize : " No Data"}</p>
+                <p><b>Chipset:</b>${data.data?.mainFeatures?.chipSet ? " " + data.data.mainFeatures.chipSet : " No Data"}</p>
+                <p><b>Memory:</b>${data.data?.mainFeatures?.memory ? " " + data.data.mainFeatures.memory : " No Data"}</p>
+                <p><b>Storage:</b>${data.data?.mainFeatures?.storage ? " " + data.data.mainFeatures.storage : " No Data"}</p>
                 
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
                
                 <p class="text-center text-primary"> <b>Other Feature</b> </p>
-                <p>${data.data?.others?.Bluetooth ? "Bluetooth: " + data.data.others.Bluetooth : "No"}</p>
-                <p>${data.data?.others?.GPS ? "GPS: " + data.data.others.GPS : "No"}</p>
-                <p>${data.data?.others?.NFC ? "NFC: " + data.data.others.NFC : "No"}</p>
-                <p>${data.data?.others?.Radio ? "Radio: " + data.data.others.Radio : "No"}</p>
-                <p>${data.data?.others?.USB ? "USB: " + data.data.others.USB : "No"}</p>
-                <p>${data.data?.others?.WLAN ? "WLAN: " + data.data.others.WLAN : "No"}</p>
+                <p><b>Bluetooth:</b> ${data.data?.others?.Bluetooth ? " " + data.data.others.Bluetooth : "No"}</p>
+                <p><b>GPS:</b>${data.data?.others?.GPS ? " " + data.data.others.GPS : " No"}</p>
+                <p><b>NFC:</b>${data.data?.others?.NFC ? " " + data.data.others.NFC : " No"}</p>
+                <p><b>Radio:</b>${data.data?.others?.Radio ? " " + data.data.others.Radio : " No"}</p>
+                <p><b>USB:</b>${data.data?.others?.USB ? " " + data.data.others.USB : " No"}</p>
+                <p><b>WLAN:</b>${data.data?.others?.WLAN ? " " + data.data.others.WLAN : " No"}</p>
                 
             </div>
 
